@@ -62,11 +62,11 @@ describe "Grocer" do
       end
 
       it "adds the coupon price to the property hash of couponed item" do
-        expect(@avocado_result["AVOCADO W/COUPON"][:price]).to eq(2.50)
+        expect(@avocado_result["AVOCADO W/COUPON"][:price]).to eq(5.00)
       end
 
       it "adds the count number to the property hash of couponed item" do
-        expect(@avocado_result["AVOCADO W/COUPON"][:count]).to eq(2)
+        expect(@avocado_result["AVOCADO W/COUPON"][:count]).to eq(1)
       end
 
       it "removes the number of discounted items from the original item's count" do
@@ -87,12 +87,13 @@ describe "Grocer" do
         cart = Array.new(5, cheese)
         consolidated_cart = consolidate_cart(cart)
         cheese_coupon = find_coupon("CHEESE")
+
         cheese_result = apply_coupons(consolidated_cart, [cheese_coupon])
 
         expect(cheese_result["CHEESE"][:price]).to eq(6.50)
         expect(cheese_result["CHEESE"][:count]).to eq(2)
-        expect(cheese_result["CHEESE W/COUPON"][:price]).to eq(5.00)
-        expect(cheese_result["CHEESE W/COUPON"][:count]).to eq(3)
+        expect(cheese_result["CHEESE W/COUPON"][:price]).to eq(15.00)
+        expect(cheese_result["CHEESE W/COUPON"][:count]).to eq(1)
         expect(cheese_result["CHEESE W/COUPON"][:clearance]).to eq(false)
       end
 
@@ -121,11 +122,11 @@ describe "Grocer" do
         ["AVOCADO", "CHEESE"].each { |item| expect(multiple_coupons[item][:count]).to eq(1) }
         expect(multiple_coupons["CHEESE"][:price]).to eq(6.50)
         expect(multiple_coupons["AVOCADO"][:price]).to eq(3.00)
-        expect(multiple_coupons["CHEESE W/COUPON"][:price]).to eq(5.00)
-        expect(multiple_coupons["CHEESE W/COUPON"][:count]).to eq(3)
+        expect(multiple_coupons["CHEESE W/COUPON"][:price]).to eq(15.00)
+        expect(multiple_coupons["CHEESE W/COUPON"][:count]).to eq(1)
         expect(multiple_coupons["CHEESE W/COUPON"][:clearance]).to eq(false)
-        expect(multiple_coupons["AVOCADO W/COUPON"][:price]).to eq(2.50)
-        expect(multiple_coupons["AVOCADO W/COUPON"][:count]).to eq(2)
+        expect(multiple_coupons["AVOCADO W/COUPON"][:price]).to eq(5.00)
+        expect(multiple_coupons["AVOCADO W/COUPON"][:count]).to eq(1)
         expect(multiple_coupons["AVOCADO W/COUPON"][:clearance]).to eq(true)
       end
 
@@ -146,9 +147,9 @@ describe "Grocer" do
         two_coupon_result = apply_coupons(consol_cart, [coupon, coupon])
 
         expect(two_coupon_result["AVOCADO"][:count]).to eq(1)
-        expect(two_coupon_result["AVOCADO W/COUPON"][:price]).to eq(2.50)
+        expect(two_coupon_result["AVOCADO W/COUPON"][:price]).to eq(5.00)
         expect(two_coupon_result["AVOCADO"][:price]).to eq(3.00)
-        expect(two_coupon_result["AVOCADO W/COUPON"][:count]).to eq(4)
+        expect(two_coupon_result["AVOCADO W/COUPON"][:count]).to eq(2)
       end
     end
   end
