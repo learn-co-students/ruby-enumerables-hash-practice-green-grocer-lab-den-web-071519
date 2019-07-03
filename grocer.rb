@@ -33,37 +33,25 @@ end
 
 
 def apply_coupons(cart, coupons)
-  coupon_hash = {}
-  if coupons.nil?
-    return cart
-  else 
-    coupons.each do |coup_hash|
-        value_price = coup_hash[:cost]/coup_hash[:num] #calculate
-        item = coup_hash[:item]
-          if coupons.length >= 1 && cart.include?(item)
-            item_hash = {
-              "#{coup_hash[:item]} W/COUPON" => {
-                :price => value_price,
-                :clearance => cart[item][:clearance],
-                :count => coup_hash[:num]
-              }
-            }
-          else
-            coupons.length >= 1 && !cart.include?(item)
-            coupons -= coup_hash
-          end
-          
-      cart.each do |food, food_hash| 
-        food_hash[:count] -= coup_hash[:num]
-      end
-      
-      final = coupon_hash.merge!(item_hash)
-      cart.merge!(final)
-    end
-  end 
-  return cart
-end
+    coupons.each do |coupon_hash|
+      coupon_item = coupon_hash[:item] #Avocado
+      if cart.keys.include?(coupon_hash[:item]) && cart[coupon_hash[:item]][:count] >= coupon_hash[:num]
+        
+        if cart["#{coupon_item} W/COUPON"]
+          cart["#{coupon_item} W/COUPON"][:count] += coupon_hash[:num]
+        else
+        cart["#{coupon_item} W/COUPON"] = {
+          :price => (coupon_hash[:cost]/coupon_hash[:num]),
+          :clearance => cart["#{coupon_item}"][:clearance],
+          :count => coupon_hash[:num]
+          }
 
+        end
+        cart[coupon_item][:count] -= coupon_hash[:num]
+      end
+    end
+  cart
+end
 
 
 def apply_clearance(cart)
