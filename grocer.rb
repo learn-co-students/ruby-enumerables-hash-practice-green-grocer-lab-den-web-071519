@@ -54,6 +54,7 @@ def apply_coupons(cart, coupons)
 end
 
 
+
 def apply_clearance(cart)
   cart.each do |item, item_hash|
     if item_hash[:clearance] == true 
@@ -61,9 +62,40 @@ def apply_clearance(cart)
       item_hash[:price] -= discount
     end
   end
-  return cart 
+  cart 
 end
 
+
+
 def checkout(cart, coupons)
-  # code here
+  total = 0
+  all_items = consolidate_cart(cart) #item: price, clearance, count
+  coupons_applied = apply_coupons(all_items, coupons)  
+  all_discounts = apply_clearance(coupons_applied)
+     #binding.pry
+      if all_discounts.keys.count == 1 
+        all_discounts.each do |product|
+          product.each do |food, food_info|
+            total = food_info[:price]
+          end
+        end
+      else
+        total = all_discounts.reduce(0) do |memo, (item, item_info)|
+          memo += (item_info[:price]*item_info[:count])
+        end
+        #binding.pry
+      end
+  total
 end
+ 
+
+
+
+
+
+
+
+
+
+
+
