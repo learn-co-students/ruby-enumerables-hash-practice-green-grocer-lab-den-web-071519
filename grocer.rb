@@ -14,26 +14,24 @@ def consolidate_cart(cart)
 end
 
 def apply_coupons(cart, coupons)
-  copyCart = cart
   coupons.each do |coupon|
     item = coupon[:item]
     if cart.include? item
+      if cart["#{item} W/COUPON"] == nil
+         cart["#{item} W/COUPON"] = cart[item]
+         cart["#{item} W/COUPON"][:price] = coupon[:cost]/coupon[:num]
+         cart["#{item} W/COUPON"][:count] = 0
+      end
+
       if cart[item][:count] > coupon[:num]
-        while cart[item][:count] > coupon[:num]
         cart[item][:count] -= coupon[:num]
-        if cart["#{item} W/COUPON"]
-        cart["#{item} W/COUPON"] = cart[item]
-        cart["#{item} W/COUPON"][:count] = coupon[:num]
-        cart["#{item} W/COUPON"][:price] = coupon[:cost]/2
-        end
-      elsif cart[item][:count] == coupon[:num]
+        cart["#{item} W/COUPON"][:count] += coupon[:num]
+      end
+
+      if cart[item][:count] == coupon[:num]
         cart[item][:count] = 1
         cart[item][:price] = coupon[:cost]/coupon[:num]
-        cart["#{item} W/COUPON"] = cart[item]
-        cart["#{item} W/COUPON"][:count] = coupon[:num] - 1
-        cart["#{item} W/COUPON"][:price] = coupon[:cost] - cart[item][:price]
-      else
-        return cart
+        cart["#{item} W/COUPON"][:count] += coupon[:num] - 1
       end
     end
   end
