@@ -37,25 +37,37 @@ def apply_coupons(cart, coupons)
               stats[:count] -= value[:count]
             elsif stats[:count] == value[:count]
               stats[:count] = 0
+            elsif stats[:count] < value[:count]
+              value[:price] = 0
             end
-
-            puts couponNumHash[food]
-            puts stats[:count]
-
           end
         end
       end
     end
   end
-
-  puts cart
   cart
 end
 
 def apply_clearance(cart)
-  # code here
+  cart.each_pair do |key, value|
+    if value[:clearance] == true
+      value[:price] = (value[:price]*0.8).round(2)
+    end
+  end
+  cart
 end
 
 def checkout(cart, coupons)
-  # code here
+  total = 0
+  cart = consolidate_cart(cart)
+  cart = apply_coupons(cart, coupons)
+  cart = apply_clearance(cart)
+  cart.each_pair do |food, values|
+    total+=values[:price]*values[:count]
+  end
+  if total > 100
+    total = (total*0.9).round(2)
+  end
+  puts cart
+  total
 end
