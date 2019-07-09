@@ -38,7 +38,7 @@ def apply_coupons(cart, coupons)
             elsif stats[:count] == value[:count]
               stats[:count] = 0
             elsif stats[:count] < value[:count]
-              value[:price] = 0
+              value[:count] = 0
             end
           end
         end
