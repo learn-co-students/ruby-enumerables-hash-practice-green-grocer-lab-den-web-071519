@@ -14,27 +14,37 @@ def consolidate_cart(cart)
 end
 
 def apply_coupons(cart, coupons)
-  coupons.each do |coupon|
-    item = coupon[:item]
-    if cart.include? item
-      if cart["#{item} W/COUPON"] == nil
-         cart["#{item} W/COUPON"] = cart[item]
-         cart["#{item} W/COUPON"][:price] = coupon[:cost]/coupon[:num]
-         cart["#{item} W/COUPON"][:count] = 0
-      end
+  couponNumHash = {}
+  coupons.each do |food|
+    if couponNumHash["#{food[:item]}"] == nil #sets couponNumHash, tracks number of possible items to coupon / tracks coupon count
+      couponNumHash["#{food[:item]}"] = food[:num]
+    else
+      couponNumHash["#{food[:item]}"] += food[:num]
+    end
 
-      if cart[item][:count] > coupon[:num]
-        cart[item][:count] -= coupon[:num]
-        cart["#{item} W/COUPON"][:count] += coupon[:num]
-      end
+    cart["#{food[:item]} W/COUPON"] = {:price => food[:cost]/food[:num], :clearance => false, :count => couponNumHash[food[:item]]}
+  end
+  cart.each_pair do |key, value| #key/value for coupon hashes
+    if key.include? "COUPON"
+      cart.each_pair do |food, stats| #key/value for food items
+        if food != key #if not a coupon
+          if key.include? food #if the right food to coupon
 
-      if cart[item][:count] == coupon[:num]
-        cart[item][:count] = 1
-        cart[item][:price] = coupon[:cost]/coupon[:num]
-        cart["#{item} W/COUPON"][:count] += coupon[:num] - 1
+
+
+
+
+
+
+
+
+          end
+        end
       end
     end
   end
+
+  puts cart
   cart
 end
 
